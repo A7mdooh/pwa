@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#00796B"/>
+  <meta name="description" content="قائمة الأنشطة الصفية التفاعلية - مدرسة أبو القاسم الزهراوي"/>
+  <meta name="keywords" content="أنشطة, تفاعلية, تعليم, مدرسة, عُمان"/>
+  <meta name="author" content="الأستاذ أحمد بن عبدالله الضامري"/>
+
+  <title>الأنشطة الصفية - مدرسة أبو القاسم الزهراوي</title>
+
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- فافيكون -->
+  <link rel="icon" type="image/png" href="assets/media/images/school-logo.png">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- أيقونات iOS -->
+  <link rel="apple-touch-icon" href="assets/media/images/school-logo.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="assets/icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/icon-192x192.png">
+  
+  <!-- إعدادات iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="الأنشطة الصفية">
+  
+  <!-- إعدادات Windows -->
+  <meta name="msapplication-TileImage" content="assets/icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#00796B">
+  
+  <!-- إعدادات PWA إضافية -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="الأنشطة الصفية">
+
+  <style>
+    :root {
+      /* نظام ألوان عُماني متطور */
+      --primary-color: #00796B;
+      --primary-light: #4DB6AC;
+      --primary-dark: #004D40;
+      --secondary-color: #FF5722;
+      --accent-color: #FFD700;
+      --success-color: #4CAF50;
+      --warning-color: #FF9800;
+      --error-color: #F44336;
+      --text-primary: #212121;
+      --text-secondary: #757575;
+      --background-light: #FAFAFA;
+      --surface-color: #FFFFFF;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-medium: rgba(0, 0, 0, 0.2);
+      --shadow-dark: rgba(0, 0, 0, 0.3);
+
+      /* متغيرات التخطيط */
+      --border-radius: 16px;
+      --border-radius-small: 8px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+
+      /* الانتقالات */
+      --transition-fast: 0.2s ease-out;
+      --transition-normal: 0.3s ease-out;
+      --transition-slow: 0.5s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg,
+        #e0f7fa 0%,
+        #b2dfdb 25%,
+        #80cbc4 50%,
+        #4db6ac 75%,
+        #26a69a 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 121, 107, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(255, 87, 34, 0.1) 0%, transparent 50%);
+      animation: backgroundShift 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-20px, 20px) rotate(1deg); }
+      50% { transform: translate(20px, -20px) rotate(-1deg); }
+      75% { transform: translate(-10px, -10px) rotate(0.5deg); }
+    }
+
+    /* أزرار التحكم المحسنة */
+    .control-buttons {
+      position: fixed;
+      top: var(--spacing-md);
+      display: flex;
+      gap: var(--spacing-sm);
+      z-index: 1000;
+    }
+
+    .control-buttons.left {
+      left: var(--spacing-md);
+    }
+
+    .control-buttons.right {
+      right: var(--spacing-md);
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary-color);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--shadow-medium);
+      transition: all var(--transition-normal);
+      backdrop-filter: blur(10px);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 8px 20px var(--shadow-dark);
+    }
+
+    .control-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    /* الحاوي الرئيسي */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-lg);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* رأس الصفحة المحسن */
+    .header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      animation: slideDown 0.8s ease-out;
+    }
+
+    .header-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      box-shadow: 0 8px 32px var(--shadow-medium);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    }
+
+    .header-title {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+      text-shadow: 2px 2px 4px var(--shadow-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .header-subtitle {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* شبكة الأنشطة */
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-lg);
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    /* بطاقات الأنشطة المحسنة */
+    .activity-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px var(--shadow-light);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideIn 0.6s ease-out;
+    }
+
+    .activity-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left var(--transition-slow);
+    }
+
+    .activity-card:hover::before {
+      left: 100%;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 40px var(--shadow-medium);
+      background: rgba(255, 255, 255, 0.98);
+    }
+
+    .activity-card:active {
+      transform: translateY(-4px) scale(0.98);
+    }
+
+    .activity-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-md);
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .activity-title {
+      font-size: clamp(1.2rem, 4vw, 1.4rem);
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+      line-height: 1.3;
+    }
+
+    .activity-desc {
+      color: var(--text-secondary);
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      line-height: 1.5;
+      text-align: justify;
+    }
+
+    /* ألوان مختلفة للبطاقات */
+    .activity-card:nth-child(4n+1) {
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .activity-card:nth-child(4n+2) {
+      border-left: 4px solid var(--secondary-color);
+    }
+
+    .activity-card:nth-child(4n+3) {
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .activity-card:nth-child(4n+4) {
+      border-left: 4px solid var(--success-color);
+    }
+
+    /* تأثيرات الحركة */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* مؤشر التحميل */
+    .loading-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3000;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(0, 121, 107, 0.3);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* إحصائيات الأنشطة */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      animation: slideUp 0.8s ease-out 0.5s both;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.9);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-small);
+      text-align: center;
+      min-width: 100px;
+      box-shadow: 0 4px 12px var(--shadow-light);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* التجاوب مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
+      
+      .activities-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+      
+      .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+      
+      .stats-bar {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+      }
+      
+      .activity-card {
+        padding: var(--spacing-md);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-card {
+        padding: var(--spacing-lg);
+      }
+      
+      .activity-icon {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* تحسينات إضافية للأداء */
+    .activity-card,
+    .control-btn {
+      will-change: transform;
+    }
+
+    /* تأثيرات التركيز للوصولية */
+    .activity-card:focus,
+    .control-btn:focus {
+      outline: 3px solid rgba(0, 121, 107, 0.5);
+      outline-offset: 2px;
+    }
+
+    /* تأثير النقر */
+    .click-effect {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .click-effect::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(0, 121, 107, 0.3);
+      transform: translate(-50%, -50%);
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- مؤشر التحميل -->
+  <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- أزرار التحكم -->
+  <div class="control-buttons right">
+    <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية" aria-label="العودة للصفحة الرئيسية">
+      🏠
+    </button>
+    <button class="control-btn" id="studentsBtn" title="إدارة الطلاب" aria-label="إدارة الطلاب">
+      👥
+    </button>
+  </div>
+
+  <div class="control-buttons left">
+    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة" aria-label="ملء الشاشة">
+      ⛶
+    </button>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="main-container">
+    <!-- رأس الصفحة -->
+    <header class="header">
+      <div class="header-card">
+        <h1 class="header-title">
+          <span>📚</span>
+          <span>الأنشطة الصفية التفاعلية</span>
+        </h1>
+        <p class="header-subtitle">
+          اختر نشاطًا تفاعليًا لبدء رحلة تعليمية ممتعة مع طلابك
+        </p>
+      </div>
+    </header>
+
+    <!-- إحصائيات سريعة -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-number" id="totalActivities">12</div>
+        <div class="stat-label">نشاط تفاعلي</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="categoriesCount">4</div>
+        <div class="stat-label">فئة مختلفة</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="readyToUse">✓</div>
+        <div class="stat-label">جاهز للاستخدام</div>
+      </div>
+    </div>
+
+    <!-- شبكة الأنشطة -->
+    <main class="activities-grid">
+      <!-- النشاط الأول: الاسم العشوائي -->
+      <div class="activity-card click-effect" data-href="activities/random.html" role="button" tabindex="0" aria-label="نشاط الاسم العشوائي">
+        <div class="activity-icon">🎯</div>
+        <h2 class="activity-title">الاسم العشوائي</h2>
+        <p class="activity-desc">
+          اختيار طالب بشكل عشوائي لبدء المشاركة أو تنفيذ نشاط صفي بطريقة عادلة ومثيرة
+        </p>
+      </div>
+
+      <!-- النشاط الثاني: المؤقت -->
+      <div class="activity-card click-effect" data-href="activities/timer.html" role="button" tabindex="0" aria-label="نشاط المؤقت">
+        <div class="activity-icon">⏱️</div>
+        <h2 class="activity-title">المؤقت التفاعلي</h2>
+        <p class="activity-desc">
+          مؤقت مرئي ومسموع يساعد في ضبط الأنشطة والمهام الصفية بدقة وفعالية
+        </p>
+      </div>
+
+      <!-- النشاط الثالث: مسابقة الحروف -->
+      <div class="activity-card click-effect" data-href="activities/Blockbusters.html" role="button" tabindex="0" aria-label="مسابقة الحروف">
+        <div class="activity-icon">🧩</div>
+        <h2 class="activity-title">مسابقة الحروف</h2>
+        <p class="activity-desc">
+          لعبة تفاعلية مثيرة بين فريقين تعتمد على الحروف والسرعة في التفكير
+        </p>
+      </div>
+
+      <!-- النشاط الرابع: مملكة التحديات الذكية -->
+      <div class="activity-card click-effect" data-href="activities/challenges-ultimate.html" role="button" tabindex="0" aria-label="مملكة التحديات الذكية">
+        <div class="activity-icon">🏆</div>
+        <h2 class="activity-title">مملكة التحديات الذكية</h2>
+        <p class="activity-desc">
+          نظام تعلم تفاعلي متقدم بالذكاء الاصطناعي مع تأثيرات كونية خلابة ومعارك ملحمية
+        </p>
+      </div>
+
+      <!-- النشاط الخامس: تحدي الفرق الكلاسيكي -->
+      <div class="activity-card click-effect" data-href="activities/challenges.html" role="button" tabindex="0" aria-label="تحدي الفرق الكلاسيكي">
+        <div class="activity-icon">🥇</div>
+        <h2 class="activity-title">تحدي الفرق الكلاسيكي</h2>
+        <p class="activity-desc">
+          مسابقة تفاعلية مثيرة بين فريقين مع نظام نقاط ومؤثرات صوتية حماسية
+        </p>
+      </div>
+
+      <!-- النشاط السادس: كوّن قصة -->
+      <div class="activity-card click-effect" data-href="activities/create-story.html" role="button" tabindex="0" aria-label="كوّن قصة">
+        <div class="activity-icon">✍️</div>
+        <h2 class="activity-title">كوّن قصة</h2>
+        <p class="activity-desc">
+          نشاط قصصي تفاعلي فردي أو جماعي لتطوير مهارات الكتابة الإبداعية
+        </p>
+      </div>
+
+      <!-- النشاط السابع: صوّت وقرر -->
+      <div class="activity-card click-effect" data-href="activities/vote.html" role="button" tabindex="0" aria-label="صوّت وقرر">
+        <div class="activity-icon">🗳️</div>
+        <h2 class="activity-title">صوّت وقرر</h2>
+        <p class="activity-desc">
+          نظام تصويت فصلي تفاعلي مع عرض النتائج بالرسوم البيانية المباشرة
+        </p>
+      </div>
+
+      <!-- النشاط الثامن: من هو؟ -->
+      <div class="activity-card click-effect" data-href="activities/whois.html" role="button" tabindex="0" aria-label="من هو؟">
+        <div class="activity-icon">🕵️</div>
+        <h2 class="activity-title">من هو؟</h2>
+        <p class="activity-desc">
+          تحدٍّ تفاعلي ممتع لاختبار الذكاء في كشف هوية الطالب من خلال تلميحات مثيرة
+        </p>
+      </div>
+
+      <!-- النشاط التاسع: مونوبولي عُمان -->
+      <div class="activity-card click-effect" data-href="activities/monopoly-oman.html" role="button" tabindex="0" aria-label="مونوبولي سلطنة عُمان">
+        <div class="activity-icon">🏰</div>
+        <h2 class="activity-title">مونوبولي سلطنة عُمان</h2>
+        <p class="activity-desc">
+          لعبة استراتيجية تفاعلية لاستكشاف معالم وثقافة سلطنة عُمان بطريقة تعليمية ممتعة
+        </p>
+      </div>
+
+      <!-- النشاط العاشر: سوق مطرح -->
+      <div class="activity-card click-effect" data-href="activities/matrah-market.html" role="button" tabindex="0" aria-label="سوق مطرح الحسابي">
+        <div class="activity-icon">🧮</div>
+        <h2 class="activity-title">سوق مطرح الحسابي</h2>
+        <p class="activity-desc">
+          لعبة تعليمية تفاعلية لتعلم الرياضيات في أجواء السوق التقليدي العُماني الأصيل
+        </p>
+      </div>
+
+      <!-- النشاط العاشر: مدرسة نزوى -->
+      <div class="activity-card click-effect" data-href="activities/nizwa-school.html" role="button" tabindex="0" aria-label="مدرسة نزوى التراثية">
+        <div class="activity-icon">🏛️</div>
+        <h2 class="activity-title">مدرسة نزوى التراثية</h2>
+        <p class="activity-desc">
+          رحلة تعليمية تفاعلية لتعلم اللغة العربية وفنونها في بيئة تراثية عُمانية أصيلة
+        </p>
+      </div>
+
+      <!-- النشاط الحادي عشر: القنبلة المؤقتة -->
+      <div class="activity-card click-effect" data-href="activities/bomb-timer.html" role="button" tabindex="0" aria-label="لعبة القنبلة المؤقتة">
+        <div class="activity-icon">💣</div>
+        <h2 class="activity-title">القنبلة المؤقتة</h2>
+        <p class="activity-desc">
+          لعبة تعليمية مثيرة لاختبار المعرفة تحت الضغط - أجب على السؤال قبل انتهاء الوقت!
+        </p>
+      </div>
+
+      <!-- النشاط الثاني عشر: سباق المعرفة -->
+      <div class="activity-card click-effect" data-href="activities/knowledge-race.html" role="button" tabindex="0" aria-label="سباق المعرفة">
+        <div class="activity-icon">🏁</div>
+        <h2 class="activity-title">سباق المعرفة</h2>
+        <p class="activity-desc">
+          سباق تعليمي مثير بين الفرق للوصول لخط النهاية عبر الإجابات الصحيحة والسريعة
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <!-- الأصوات -->
+  <audio id="clickSound" src="assets/media/sounds/Click.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="navigationSound" src="assets/media/sounds/select.mp3" preload="auto" aria-hidden="true"></audio>
+
+  <script>
+    console.log('🚀 بدء تحميل صفحة الأنشطة...');
+
+    // تحسين الأداء والذاكرة
+    const elements = {
+      loadingIndicator: document.getElementById('loadingIndicator'),
+      clickSound: document.getElementById('clickSound'),
+      navigationSound: document.getElementById('navigationSound'),
+      homeBtn: document.getElementById('homeBtn'),
+      fullscreenBtn: document.getElementById('fullscreenBtn')
+    };
+
+    // تشغيل الصوت مع معالجة الأخطاء
+    function playSound(soundElement) {
+      try {
+        if (soundElement && soundElement.readyState >= 2) {
+          soundElement.currentTime = 0;
+          const playPromise = soundElement.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              console.log('🔇 تعذر تشغيل الصوت (يتطلب تفاعل المستخدم)');
+            });
+          }
+        }
+      } catch (error) {
+        console.log('🔇 خطأ في تشغيل الصوت:', error);
+      }
+    }
+
+    // تأثيرات بصرية للنقر
+    function addClickEffect(element) {
+      element.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        element.style.transform = '';
+      }, 150);
+    }
+
+    // وظيفة ملء الشاشة المحسنة
+    async function toggleFullScreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          console.log('🖥️ تم تفعيل ملء الشاشة');
+        } else {
+          await document.exitFullscreen();
+          console.log('🖥️ تم إلغاء ملء الشاشة');
+        }
+      } catch (error) {
+        console.warn('⚠️ فشل في تغيير وضع ملء الشاشة:', error);
+      }
+    }
+
+    // تحديث عدد الأنشطة ديناميكياً
+    function updateStats() {
+      const activityCards = document.querySelectorAll('.activity-card');
+      const totalActivities = activityCards.length;
+      
+      document.getElementById('totalActivities').textContent = totalActivities;
+      
+      // تأثير عد متحرك
+      animateNumber('totalActivities', 0, totalActivities, 1000);
+      animateNumber('categoriesCount', 0, 4, 1200);
+    }
+
+    // تأثير العد المتحرك
+    function animateNumber(elementId, start, end, duration) {
+      const element = document.getElementById(elementId);
+      const startTime = performance.now();
+      
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const current = Math.floor(start + (end - start) * progress);
+        element.textContent = elementId === 'readyToUse' ? '✓' : current;
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+      
+      requestAnimationFrame(update);
+    }
+
+    // معالجة النقر على بطاقات الأنشطة
+    function handleActivityClick(event) {
+      const card = event.currentTarget;
+      const href = card.getAttribute('data-href');
+      
+      if (href) {
+        addClickEffect(card);
+        playSound(elements.navigationSound);
+        
+        // إضافة تأثير الموجة
+        card.classList.add('click-effect');
+        setTimeout(() => {
+          card.classList.remove('click-effect');
+        }, 600);
+        
+        // تأثير انتقال سلس
+        setTimeout(() => {
+          window.location.href = href;
+        }, 300);
+      }
+    }
+
+    // تهيئة التطبيق
+    function initializeApp() {
+      console.log('⚡ جاري تهيئة صفحة الأنشطة...');
+      
+      // تحديث الإحصائيات
+      updateStats();
+      
+      // إخفاء مؤشر التحميل
+      elements.loadingIndicator.style.display = 'none';
+      
+      console.log('🎉 تم تحميل صفحة الأنشطة بنجاح!');
+    }
+
+    // معالجة الأحداث
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('📄 تم تحميل DOM - بدء تهيئة الأحداث...');
+      
+      // تهيئة التطبيق
+      initializeApp();
+
+      // زر ملء الشاشة
+      if (elements.fullscreenBtn) {
+        elements.fullscreenBtn.addEventListener('click', (e) => {
+          console.log('🖥️ تم النقر على زر ملء الشاشة');
+          addClickEffect(e.target);
+          playSound(elements.clickSound);
+          toggleFullScreen();
+        });
+      }
+
+      // زر العودة للصفحة الرئيسية
+      if (elements.homeBtn) {
+        elements.homeBtn.addEventListener('click', (e) => {
+          console.log('🏠 تم النقر على زر العودة للصفحة الرئيسية');
+          addClickEffect(e.target);
+          playSound(elements.clickSound);
+          
+          // تأثير انتقال سلس
+          document.body.style.opacity = '0';
+          document.body.style.transform = 'scale(0.95)';
+          
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 300);
+        });
+      }
+
+      // زر إدارة الطلاب
+      const studentsBtn = document.getElementById('studentsBtn');
+      if (studentsBtn) {
+        studentsBtn.addEventListener('click', (e) => {
+          console.log('👥 تم النقر على زر إدارة الطلاب');
+          addClickEffect(e.target);
+          playSound(elements.clickSound);
+          
+          // تأثير انتقال سلس
+          document.body.style.opacity = '0';
+          document.body.style.transform = 'scale(0.95)';
+          
+          setTimeout(() => {
+            window.location.href = 'student-management.html';
+          }, 300);
+        });
+      }
+
+      // معالجة بطاقات الأنشطة
+      const activityCards = document.querySelectorAll('.activity-card');
+      activityCards.forEach(card => {
+        card.addEventListener('click', handleActivityClick);
+        
+        // دعم لوحة المفاتيح
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleActivityClick(e);
+          }
+        });
+      });
+
+      // اختصارات لوحة المفاتيح
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case 'Escape':
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            }
+            break;
+          case 'F11':
+            e.preventDefault();
+            toggleFullScreen();
+            break;
+          case 'Home':
+            elements.homeBtn.click();
+            break;
+        }
+      });
+
+      console.log('✅ تم تهيئة جميع الأحداث بنجاح!');
+    });
+
+    // معالجة الأخطاء العامة
+    window.addEventListener('error', (e) => {
+      console.error('💥 خطأ عام في التطبيق:', e.error);
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('💥 خطأ غير معالج في Promise:', e.reason);
+    });
+
+    console.log('📝 تم تحميل جميع النصوص البرمجية!');
+  </script>
+  
+  <!-- PWA Scripts -->
+  <script src="assets/js/pwa.js"></script>
+</body>
+</html>

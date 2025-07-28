@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# PWA Files
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /offline.html
+
+# Static Assets
+Allow: /assets/
+Allow: /activities/
+Allow: /docs/
+
+# Data Files (restrict sensitive data)
+Disallow: /config/users.json
+Disallow: /data/studentData.json
+
+# Generated Files
+Disallow: /icon-generator.html
+Disallow: /update-pwa.ps1
+Disallow: /update-activities-pwa.ps1
+
+Sitemap: https://your-domain.com/sitemap.xml

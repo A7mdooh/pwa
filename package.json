@@ -1,0 +1,77 @@
+{
+  "name": "class-activities-pwa",
+  "version": "1.0.0",
+  "description": "برنامج الأنشطة الصفية التفاعلي - Progressive Web App",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "dev": "powershell -ExecutionPolicy Bypass -File start-dev-server.ps1",
+    "update-icons": "node scripts/generate-icons.js",
+    "validate-pwa": "lighthouse --only-categories=pwa --chrome-flags=\"--headless\" http://localhost:8000",
+    "build": "echo 'Static PWA - No build process required'",
+    "test": "echo 'Run tests using browser DevTools'"
+  },
+  "keywords": [
+    "pwa",
+    "education",
+    "arabic",
+    "school",
+    "activities",
+    "interactive",
+    "oman"
+  ],
+  "author": "الأستاذ أحمد بن عبدالله الضامري",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/class-activities-pwa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/class-activities-pwa/issues"
+  },
+  "homepage": "https://your-domain.com",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "Chrome >= 67",
+    "Firefox >= 60",
+    "Safari >= 12.1",
+    "Edge >= 79",
+    "Opera >= 54"
+  ],
+  "pwa": {
+    "name": "برنامج الأنشطة الصفية",
+    "short_name": "الأنشطة الصفية",
+    "description": "برنامج الأنشطة الصفية التفاعلي لمدرسة أبو القاسم الزهراوي",
+    "theme_color": "#00796B",
+    "background_color": "#00796B",
+    "display": "standalone",
+    "scope": "./",
+    "start_url": "./index.html"
+  },
+  "devDependencies": {
+    "lighthouse": "^10.0.0"
+  },
+  "directories": {
+    "activities": "./activities",
+    "assets": "./assets",
+    "config": "./config",
+    "data": "./data",
+    "docs": "./docs"
+  },
+  "files": [
+    "index.html",
+    "main.html",
+    "student-management.html",
+    "manifest.json",
+    "sw.js",
+    "offline.html",
+    "activities/",
+    "assets/",
+    "config/",
+    "data/",
+    "docs/"
+  ]
+}

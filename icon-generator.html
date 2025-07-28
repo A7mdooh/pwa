@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator for PWA</title>
+    <style>
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .container { padding: 20px; font-family: Arial, sans-serif; }
+        .icon-preview { display: inline-block; margin: 10px; text-align: center; }
+        .icon-preview canvas { display: block; }
+        .icon-preview label { font-size: 12px; color: #666; }
+        button { padding: 10px 20px; background: #00796B; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #004D40; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>مولد أيقونات PWA</h2>
+        <p>اختر الشعار المدرسي لتحويله إلى أيقونات بأحجام مختلفة:</p>
+        
+        <input type="file" id="imageInput" accept="image/*">
+        <button onclick="generateIcons()">إنتاج الأيقونات</button>
+        <button onclick="downloadAll()">تحميل جميع الأيقونات</button>
+        
+        <div id="iconPreviews"></div>
+    </div>
+
+    <script>
+        const iconSizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        let sourceImage = null;
+        let generatedIcons = {};
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        sourceImage = img;
+                        console.log('تم تحميل الصورة:', img.width, 'x', img.height);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateIcons() {
+            if (!sourceImage) {
+                alert('يرجى اختيار صورة أولاً');
+                return;
+            }
+
+            const previewContainer = document.getElementById('iconPreviews');
+            previewContainer.innerHTML = '';
+
+            iconSizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = size;
+                canvas.height = size;
+                
+                // رسم خلفية بيضاء
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, size, size);
+                
+                // حساب الحجم والموضع للحفاظ على النسبة
+                const aspectRatio = sourceImage.width / sourceImage.height;
+                let drawWidth, drawHeight, drawX, drawY;
+                
+                if (aspectRatio > 1) {
+                    drawWidth = size * 0.8;
+                    drawHeight = drawWidth / aspectRatio;
+                } else {
+                    drawHeight = size * 0.8;
+                    drawWidth = drawHeight * aspectRatio;
+                }
+                
+                drawX = (size - drawWidth) / 2;
+                drawY = (size - drawHeight) / 2;
+                
+                // رسم الصورة
+                ctx.drawImage(sourceImage, drawX, drawY, drawWidth, drawHeight);
+                
+                // إضافة إطار دائري (اختياري)
+                if (size >= 192) {
+                    ctx.strokeStyle = '#00796B';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(size/2, size/2, size/2 - 5, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+                
+                // حفظ البيانات
+                generatedIcons[size] = canvas.toDataURL('image/png');
+                
+                // إضافة المعاينة
+                const preview = document.createElement('div');
+                preview.className = 'icon-preview';
+                preview.innerHTML = `
+                    <canvas width="${size}" height="${size}"></canvas>
+                    <label>${size}x${size}px</label>
+                    <br>
+                    <button onclick="downloadIcon(${size})">تحميل</button>
+                `;
+                
+                const previewCanvas = preview.querySelector('canvas');
+                const previewCtx = previewCanvas.getContext('2d');
+                previewCtx.drawImage(canvas, 0, 0);
+                
+                previewContainer.appendChild(preview);
+            });
+        }
+
+        function downloadIcon(size) {
+            if (!generatedIcons[size]) return;
+            
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = generatedIcons[size];
+            link.click();
+        }
+
+        function downloadAll() {
+            Object.keys(generatedIcons).forEach(size => {
+                setTimeout(() => downloadIcon(parseInt(size)), parseInt(size) * 10);
+            });
+        }
+
+        // تحميل الشعار الافتراضي تلقائياً
+        window.addEventListener('load', function() {
+            const defaultImage = new Image();
+            defaultImage.crossOrigin = 'anonymous';
+            defaultImage.onload = function() {
+                sourceImage = defaultImage;
+                generateIcons();
+            };
+            defaultImage.src = 'assets/media/images/school-logo.png';
+        });
+    </script>
+</body>
+</html>

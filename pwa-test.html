@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار صحة PWA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #00796B, #4DB6AC); 
+            min-height: 100vh; 
+            padding: 20px; 
+            color: #333;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+            overflow: hidden;
+        }
+        .header { 
+            background: #00796B; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        .content { padding: 20px; }
+        .test-item { 
+            margin: 15px 0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border-left: 4px solid #ddd; 
+        }
+        .test-item.pass { 
+            background: #e8f5e8; 
+            border-left-color: #4CAF50; 
+        }
+        .test-item.fail { 
+            background: #ffebee; 
+            border-left-color: #f44336; 
+        }
+        .test-item.warn { 
+            background: #fff3e0; 
+            border-left-color: #ff9800; 
+        }
+        .status { 
+            font-weight: bold; 
+            margin-bottom: 8px; 
+        }
+        .status.pass { color: #4CAF50; }
+        .status.fail { color: #f44336; }
+        .status.warn { color: #ff9800; }
+        button { 
+            background: #00796B; 
+            color: white; 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            margin: 10px 5px; 
+            font-size: 14px;
+        }
+        button:hover { background: #004D40; }
+        .info { 
+            background: #f5f5f5; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 15px 0; 
+        }
+        .log { 
+            background: #1e1e1e; 
+            color: #00ff00; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            max-height: 200px; 
+            overflow-y: auto; 
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 اختبار صحة PWA</h1>
+            <p>فحص شامل لمتطلبات Progressive Web App</p>
+        </div>
+        
+        <div class="content">
+            <button onclick="runAllTests()">🧪 تشغيل جميع الاختبارات</button>
+            <button onclick="clearResults()">🗑️ مسح النتائج</button>
+            <button onclick="exportResults()">📥 تصدير النتائج</button>
+            
+            <div class="info">
+                <h3>📋 معلومات النظام</h3>
+                <p id="systemInfo">جاري التحميل...</p>
+            </div>
+            
+            <div id="testResults"></div>
+            
+            <div class="log" id="testLog" style="display: none;">
+                <h4>📝 سجل الاختبارات:</h4>
+                <div id="logContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+        let logEntries = [];
+
+        // تسجيل الأحداث
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            logEntries.push(`[${timestamp}] ${type.toUpperCase()}: ${message}`);
+            updateLogDisplay();
+        }
+
+        function updateLogDisplay() {
+            const logContent = document.getElementById('logContent');
+            logContent.innerHTML = logEntries.join('<br>');
+            document.getElementById('testLog').style.display = 'block';
+        }
+
+        // عرض معلومات النظام
+        function displaySystemInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                platform: navigator.platform,
+                online: navigator.onLine,
+                cookieEnabled: navigator.cookieEnabled,
+                serviceWorkerSupport: 'serviceWorker' in navigator,
+                notificationSupport: 'Notification' in window,
+                pushSupport: 'PushManager' in window,
+                cacheSupport: 'caches' in window,
+                httpsProtocol: location.protocol === 'https:',
+                currentUrl: location.href
+            };
+
+            const infoHtml = Object.entries(info).map(([key, value]) => {
+                const status = typeof value === 'boolean' ? (value ? '✅' : '❌') : '';
+                return `<strong>${key}:</strong> ${status} ${value}`;
+            }).join('<br>');
+
+            document.getElementById('systemInfo').innerHTML = infoHtml;
+        }
+
+        // اختبارات PWA
+        const tests = [
+            {
+                name: 'دعم Service Worker',
+                test: () => 'serviceWorker' in navigator,
+                description: 'التحقق من دعم المتصفح لـ Service Workers'
+            },
+            {
+                name: 'بروتوكول HTTPS',
+                test: () => location.protocol === 'https:' || location.hostname === 'localhost',
+                description: 'PWA يتطلب HTTPS أو localhost للتطوير'
+            },
+            {
+                name: 'Web App Manifest',
+                test: async () => {
+                    try {
+                        const response = await fetch('./manifest.json');
+                        return response.ok;
+                    } catch (e) {
+                        return false;
+                    }
+                },
+                description: 'التحقق من وجود ملف Web App Manifest'
+            },
+            {
+                name: 'تسجيل Service Worker',
+                test: async () => {
+                    try {
+                        const registration = await navigator.serviceWorker.getRegistration();
+                        return !!registration;
+                    } catch (e) {
+                        return false;
+                    }
+                },
+                description: 'التحقق من تسجيل Service Worker بنجاح'
+            },
+            {
+                name: 'دعم Cache API',
+                test: () => 'caches' in window,
+                description: 'التحقق من دعم Cache API للتخزين المؤقت'
+            },
+            {
+                name: 'دعم الإشعارات',
+                test: () => 'Notification' in window,
+                description: 'التحقق من دعم إشعارات المتصفح'
+            },
+            {
+                name: 'دعم Push API',
+                test: () => 'PushManager' in window,
+                description: 'التحقق من دعم Push notifications'
+            },
+            {
+                name: 'Manifest في HTML',
+                test: () => {
+                    const manifest = document.querySelector('link[rel="manifest"]');
+                    return !!manifest;
+                },
+                description: 'التحقق من ربط Manifest في HTML'
+            },
+            {
+                name: 'أيقونة Apple Touch',
+                test: () => {
+                    const icon = document.querySelector('link[rel="apple-touch-icon"]');
+                    return !!icon;
+                },
+                description: 'التحقق من أيقونة iOS'
+            },
+            {
+                name: 'Theme Color',
+                test: () => {
+                    const theme = document.querySelector('meta[name="theme-color"]');
+                    return !!theme;
+                },
+                description: 'التحقق من لون الموضوع'
+            },
+            {
+                name: 'Viewport Meta',
+                test: () => {
+                    const viewport = document.querySelector('meta[name="viewport"]');
+                    return !!viewport;
+                },
+                description: 'التحقق من إعدادات Viewport'
+            },
+            {
+                name: 'صفحة Offline',
+                test: async () => {
+                    try {
+                        const response = await fetch('./offline.html');
+                        return response.ok;
+                    } catch (e) {
+                        return false;
+                    }
+                },
+                description: 'التحقق من وجود صفحة أوفلاين'
+            }
+        ];
+
+        // تشغيل اختبار واحد
+        async function runTest(test) {
+            log(`بدء اختبار: ${test.name}`);
+            try {
+                const result = await test.test();
+                const status = result ? 'pass' : 'fail';
+                log(`${test.name}: ${result ? 'نجح' : 'فشل'}`, status);
+                return { ...test, result, status };
+            } catch (error) {
+                log(`خطأ في اختبار ${test.name}: ${error.message}`, 'error');
+                return { ...test, result: false, status: 'fail', error: error.message };
+            }
+        }
+
+        // تشغيل جميع الاختبارات
+        async function runAllTests() {
+            log('بدء تشغيل جميع الاختبارات');
+            testResults = [];
+            
+            for (const test of tests) {
+                const result = await runTest(test);
+                testResults.push(result);
+                displayTestResult(result);
+            }
+            
+            displaySummary();
+            log('انتهاء جميع الاختبارات');
+        }
+
+        // عرض نتيجة اختبار
+        function displayTestResult(result) {
+            const resultsContainer = document.getElementById('testResults');
+            
+            const testItem = document.createElement('div');
+            testItem.className = `test-item ${result.status}`;
+            
+            const icon = result.status === 'pass' ? '✅' : '❌';
+            const statusText = result.status === 'pass' ? 'نجح' : 'فشل';
+            
+            testItem.innerHTML = `
+                <div class="status ${result.status}">${icon} ${result.name} - ${statusText}</div>
+                <div>${result.description}</div>
+                ${result.error ? `<div style="color: #f44336; font-size: 12px; margin-top: 5px;">خطأ: ${result.error}</div>` : ''}
+            `;
+            
+            resultsContainer.appendChild(testItem);
+        }
+
+        // عرض ملخص النتائج
+        function displaySummary() {
+            const passed = testResults.filter(r => r.status === 'pass').length;
+            const total = testResults.length;
+            const percentage = Math.round((passed / total) * 100);
+            
+            const summaryItem = document.createElement('div');
+            summaryItem.className = 'test-item';
+            summaryItem.style.background = '#e3f2fd';
+            summaryItem.style.borderLeftColor = '#2196F3';
+            
+            summaryItem.innerHTML = `
+                <div class="status" style="color: #2196F3;">📊 الملخص النهائي</div>
+                <div>نجح ${passed} من ${total} اختبار (${percentage}%)</div>
+                <div style="margin-top: 10px;">
+                    ${percentage >= 80 ? '🎉 ممتاز! التطبيق جاهز كـ PWA' : 
+                      percentage >= 60 ? '⚠️ جيد، لكن يحتاج بعض التحسينات' : 
+                      '❌ يحتاج إلى إصلاحات مهمة'}
+                </div>
+            `;
+            
+            document.getElementById('testResults').appendChild(summaryItem);
+        }
+
+        // مسح النتائج
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('testLog').style.display = 'none';
+            testResults = [];
+            logEntries = [];
+            log('تم مسح جميع النتائج');
+        }
+
+        // تصدير النتائج
+        function exportResults() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                url: location.href,
+                userAgent: navigator.userAgent,
+                results: testResults,
+                logs: logEntries
+            };
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pwa-test-report-${new Date().toISOString().slice(0, 19)}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            log('تم تصدير تقرير الاختبارات');
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            displaySystemInfo();
+            log('تم تحميل أدوات اختبار PWA');
+        });
+
+        // اختبار إضافي لمراقبة Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                log('Service Worker جاهز ونشط');
+            }).catch(error => {
+                log(`خطأ في Service Worker: ${error.message}`, 'error');
+            });
+        }
+
+        // مراقبة حالة الاتصال
+        window.addEventListener('online', () => log('تم الاتصال بالإنترنت'));
+        window.addEventListener('offline', () => log('تم قطع الاتصال بالإنترنت'));
+    </script>
+</body>
+</html>

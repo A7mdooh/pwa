@@ -1,0 +1,127 @@
+<!-- Template للأزرار الموحدة - نسخ هذا في كل صفحة -->
+
+<!-- CSS للأزرار الموحدة -->
+<style>
+/* أزرار التحكم الموحدة */
+.control-btn {
+    position: fixed;
+    top: 15px;
+    font-size: 24px;
+    background: rgba(255,255,255,0.95);
+    border: 2px solid #00796B;
+    color: #00796B;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    z-index: 2147483647;
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    transform: scale(1.1);
+    background: #00796B;
+    color: white;
+    box-shadow: 0 0 20px rgba(0, 121, 107, 0.5);
+}
+
+#homeBtn {
+    right: 15px;
+}
+
+#gameGuideBtn {
+    right: 75px;
+}
+
+#fullscreenBtn {
+    left: 15px;
+}
+
+/* تحسينات للجوال */
+@media (max-width: 480px) {
+    .control-btn {
+        font-size: 20px;
+        width: 45px;
+        height: 45px;
+        padding: 8px;
+    }
+    #homeBtn {
+        right: 10px;
+    }
+    #gameGuideBtn {
+        right: 65px;
+    }
+    #fullscreenBtn {
+        left: 10px;
+    }
+}
+</style>
+
+<!-- HTML للأزرار -->
+<button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">🏠</button>
+<button class="control-btn" id="gameGuideBtn" title="دليل اللعبة">📖</button>
+<button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
+
+<!-- JavaScript للأزرار -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // إنشاء كائن الصوت
+    const clickSound = new Audio('https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/assets/media/sounds/Click.mp3');
+    clickSound.preload = 'auto';
+
+    // وظيفة تشغيل الصوت
+    function playClickSound() {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(() => {});
+    }
+
+    // زر العودة للصفحة الرئيسية
+    document.getElementById('homeBtn').addEventListener('click', function() {
+        playClickSound();
+        window.location.href = 'https://a7mdooh.github.io/entertainment-app/main.html';
+    });
+
+    // زر دليل اللعبة - يجب إضافة دالة showGameGuide() في كل صفحة
+    document.getElementById('gameGuideBtn').addEventListener('click', function() {
+        playClickSound();
+        if (typeof showGameGuide === 'function') {
+            showGameGuide();
+        } else {
+            alert('دليل هذه اللعبة قيد التطوير');
+        }
+    });
+
+    // زر ملء الشاشة
+    document.getElementById('fullscreenBtn').addEventListener('click', function() {
+        playClickSound();
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log('خطأ في ملء الشاشة:', err);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    });
+
+    // تفعيل ملء الشاشة عند أول تفاعل
+    function requestFullscreenOnFirstInteraction() {
+        function handler() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(()=>{});
+            }
+            window.removeEventListener('click', handler);
+            window.removeEventListener('keydown', handler);
+            window.removeEventListener('touchstart', handler);
+        }
+        window.addEventListener('click', handler);
+        window.addEventListener('keydown', handler);
+        window.addEventListener('touchstart', handler);
+    }
+    requestFullscreenOnFirstInteraction();
+});
+</script>
